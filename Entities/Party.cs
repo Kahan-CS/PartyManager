@@ -14,7 +14,8 @@ namespace PartyManager.Entities
 
         [Required(ErrorMessage = "Please enter the event date")]
         [DataType(DataType.DateTime)]
-        public DateTime EventDate { get; set; }
+        [CustomValidation(typeof(Party), nameof(ValidateFutureDate))]
+        public DateTime EventDate { get; set; } = DateTime.Today;
 
         [Required(ErrorMessage = "Please enter a location")]
         public string? Location { get; set; }
@@ -23,6 +24,13 @@ namespace PartyManager.Entities
 
         [NotMapped]
         public int NumberOfInvitations => Invitations?.Count ?? 0;
+
+        public static ValidationResult ValidateFutureDate(DateTime date, ValidationContext context)
+        {
+            return date >= DateTime.Today
+                ? ValidationResult.Success
+                : new ValidationResult("Event date must be in the future.");
+        }
     }
 
 }
