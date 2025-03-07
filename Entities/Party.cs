@@ -19,7 +19,7 @@ namespace PartyManager.Entities
         [Required(ErrorMessage = "Please enter a location")]
         public string? Location { get; set; }
 
-        public ICollection<Invitation>? Invitations { get; }
+        public virtual ICollection<Invitation> Invitations { get; set; } = new List<Invitation>();
 
         [NotMapped]
         public int NumberOfInvitations => Invitations?.Count ?? 0;

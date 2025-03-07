@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using PartyManager.Data;
 using PartyManager.Entities;
 using PartyManager.Models;
@@ -16,16 +17,16 @@ namespace PartyManager.Controllers
             _context = context;
         }
 
-        // GET: /Party/List
+        // GET: /PartyManager/List
         public IActionResult List()
         {
             // Retrieve all parties. Since Party already has an unmapped property for InvitationCount,
             // we don't need to include the invitations if only the count is displayed.
-            var parties = _context.Parties.ToList();
+            var parties = _context.Parties.Include(p => p.Invitations).ToList();
             return View(parties);
         }
 
-        // GET: /Party/Add
+        // GET: /PartyManager/Add
         [HttpGet]
         public IActionResult Add()
         {
@@ -38,7 +39,7 @@ namespace PartyManager.Controllers
             return View(partyViewModel);
         }
 
-        // POST: /Party/Add
+        // POST: /PartyManager/Add
         [HttpPost]
         public IActionResult Add(PartyViewModel model)
         {
@@ -52,7 +53,7 @@ namespace PartyManager.Controllers
             return View(model);
         }
 
-        // GET: /Party/Edit/{id}
+        // GET: /PartyManager/Edit/{id}
         [HttpGet]
         public IActionResult Edit(int id)
         {
@@ -70,7 +71,7 @@ namespace PartyManager.Controllers
             return View(partyViewModel);
         }
 
-        // POST: /Party/Edit
+        // POST: /PartyManager/Edit
         [HttpPost]
         public IActionResult Edit(PartyViewModel model)
         {
@@ -83,10 +84,10 @@ namespace PartyManager.Controllers
             return View(model);
         }
 
-        // GET: /Party/Modify/{id}
+        // GET: /PartyManager/Manage/{id}
         // This page shows the party summary, a list of invitations, and a form to add a new invitation.
         [HttpGet]
-        public IActionResult Modify(int id)
+        public IActionResult Manage(int id)
         {
             var party = _context.Parties.Find(id);
             if (party == null)
@@ -95,36 +96,45 @@ namespace PartyManager.Controllers
             // Load existing invitations for the party.
             var invitations = _context.Invitations.Where(i => i.PartyId == id).ToList();
 
-            // Create a view model for modifying the party.
-            var modifyViewModel = new PartyModifyViewModel
+            // Create a view model for manageing the party.
+            var manageViewModel = new PartyManageViewModel
             {
                 Party = party,
+                PartyId = party.PartyId,  // Set the PartyId for binding on POST.
                 Invitations = invitations,
                 // Prepare a new invitation for data binding on the add invitation form.
                 NewInvitation = new Invitation { PartyId = id }
             };
 
-            return View(modifyViewModel);
+            return View(manageViewModel);
         }
 
-        // POST: /Party/AddInvitation
+        // POST: /PartyManager/AddInvitation
         // Handles adding a new invitation to the party.
         [HttpPost]
-        public IActionResult AddInvitation(PartyModifyViewModel model)
+        public IActionResult AddInvitation(PartyManageViewModel model)
         {
             if (ModelState.IsValid)
             {
+                //var errors = ModelState.Values.SelectMany(v => v.Errors)
+                //                      .Select(e => e.ErrorMessage).ToList();
+                //System.Diagnostics.Debug.WriteLine("Validation Errors: " + string.Join(", ", errors));
+
                 // Ensure the new invitation is associated with the correct party.
-                model.NewInvitation.PartyId = model.Party.PartyId;
+                model.NewInvitation.PartyId = model.PartyId;
                 // The invitation status will default to InviteNotSent.
                 _context.Invitations.Add(model.NewInvitation);
                 _context.SaveChanges();
+                // Redirect back to the manage page for the same party.
+                return RedirectToAction("Manage", new { id = model.PartyId });
             }
-            // Redirect back to the modify page for the same party.
-            return RedirectToAction("Modify", new { id = model.Party.PartyId });
+            model.Party = _context.Parties.Find(model.PartyId);
+            // Reload invitations to prevent null reference
+            model.Invitations = _context.Invitations.Where(i => i.PartyId == model.PartyId).ToList();
+            return View("Manage", model); // Return view instead of redirecting
         }
 
-        // POST: /Party/SendInvitations/{id}
+        // POST: /PartyManager/SendInvitations/{id}
         // Sends invitation emails to all guests whose invitations have not yet been sent.
         [HttpPost]
         public IActionResult SendInvitations(int id)
@@ -139,8 +149,8 @@ namespace PartyManager.Controllers
                 .ToList();
 
             // Email settings: these should be stored securely in configuration.
-            string fromAddress = "TEST-GMAIL-ADDRESS";
-            string password = "YOUR-GENERATED-PASSWORD";
+            string fromAddress = "YOUR-EMAIL";
+            string password = "EMAIL-CUSTOM-APP-PASSWORD";
 
             foreach (var invitation in unsentInvitations)
             {
@@ -161,7 +171,7 @@ namespace PartyManager.Controllers
                     Subject = $"You have been invited to {party.Description} Party!",
                     Body = $"<h1>Hello {invitation.GuestName}</h1>" +
                            $"<p>You have been invited to the {party.Description} party at {party.Location} on {party.EventDate:MMMM dd, yyyy}!</p>" +
-                           $"<p>Please <a href=\"http://localhost:7269/Invitation/Respond?partyId={party.PartyId}&invitationId={invitation.InvitationId}\">let us know</a> if you can attend.</p>" +
+                           $"<p>Please <a href=\"https://localhost:5001/Invitation/Respond?partyId={party.PartyId}&invitationId={invitation.InvitationId}\">let us know</a> if you can attend.</p>" +
                            $"<p>Sincerely,<br>Party Manager App</p>",
                     IsBodyHtml = true
                 };
@@ -184,7 +194,7 @@ namespace PartyManager.Controllers
             // Save the status updates.
             _context.SaveChanges();
 
-            return RedirectToAction("Modify", new { id = party.PartyId });
+            return RedirectToAction("Manage", new { id = party.PartyId });
         }
     }
 }
