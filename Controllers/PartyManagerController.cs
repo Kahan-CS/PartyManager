@@ -8,6 +8,9 @@ using System.Net.Mail;
 
 namespace PartyManager.Controllers
 {
+    /// <summary>
+    /// Controller for managing party actions of list, edit, manage, and invitation actions of add & send invitations.
+    /// </summary>
     public class PartyManagerController : Controller
     {
         private readonly PartyDbContext _context;
@@ -17,6 +20,12 @@ namespace PartyManager.Controllers
             _context = context;
         }
 
+        /// <summary>
+        /// This method is used to list all the parties in the database.
+        /// </summary>
+        /// <returns> 
+        /// It returns the list of parties, including their invitations.
+        /// </returns>
         // GET: /PartyManager/List
         public IActionResult List()
         {
@@ -26,6 +35,12 @@ namespace PartyManager.Controllers
             return View(parties);
         }
 
+        /// <summary>
+        /// This method is used to display the form for adding a new party.
+        /// </summary>
+        /// <returns> 
+        /// It returns the view for adding a new party.
+        /// </returns>
         // GET: /PartyManager/Add
         [HttpGet]
         public IActionResult Add()
@@ -39,6 +54,14 @@ namespace PartyManager.Controllers
             return View(partyViewModel);
         }
 
+
+        /// <summary>
+        /// This method is used to handle the form submission for adding a new party.
+        /// </summary>
+        /// <param name="model">The view model containing the party and invitations data.</param>
+        /// <returns> 
+        /// It returns a redirect to the list of parties if successful, otherwise it returns the same view with validation errors.
+        /// </returns>
         // POST: /PartyManager/Add
         [HttpPost]
         public IActionResult Add(PartyViewModel model)
@@ -53,6 +76,14 @@ namespace PartyManager.Controllers
             return View(model);
         }
 
+
+        /// <summary>
+        /// This method is used to display the form for editing an existing party.
+        /// </summary>
+        /// <param name="id">The ID of the party to edit.</param>
+        /// <returns> 
+        /// It returns the view for editing the party.
+        /// </returns>
         // GET: /PartyManager/Edit/{id}
         [HttpGet]
         public IActionResult Edit(int id)
@@ -71,6 +102,14 @@ namespace PartyManager.Controllers
             return View(partyViewModel);
         }
 
+
+        /// <summary>
+        /// This method is used to handle the form submission for editing an existing party.
+        /// </summary>
+        /// <param name="model">The view model containing the party and invitations data.</param>
+        /// <returns> 
+        /// It returns a redirect to the list of parties if successful, otherwise it returns the same view with validation errors.
+        /// </returns>
         // POST: /PartyManager/Edit
         [HttpPost]
         public IActionResult Edit(PartyViewModel model)
@@ -84,6 +123,14 @@ namespace PartyManager.Controllers
             return View(model);
         }
 
+
+        /// <summary>
+        /// This method is used to display the manage page for a specific party.
+        /// </summary>
+        /// <param name="id">The ID of the party to manage.</param>
+        /// <returns> 
+        /// It returns the view for managing the party, including a summary, list of invitations, and a form to add a new invitation.
+        /// </returns>
         // GET: /PartyManager/Manage/{id}
         // This page shows the party summary, a list of invitations, and a form to add a new invitation.
         [HttpGet]
@@ -109,6 +156,14 @@ namespace PartyManager.Controllers
             return View(manageViewModel);
         }
 
+
+        /// <summary>
+        /// This method is used to handle adding a new invitation to a party.
+        /// </summary>
+        /// <param name="model">The view model containing the party and new invitation data.</param>
+        /// <returns> 
+        /// It returns a redirect to the manage page for the same party if successful, otherwise it returns the same view with validation errors.
+        /// </returns>
         // POST: /PartyManager/AddInvitation
         // Handles adding a new invitation to the party.
         [HttpPost]
@@ -134,6 +189,14 @@ namespace PartyManager.Controllers
             return View("Manage", model); // Return view instead of redirecting
         }
 
+
+        /// <summary>
+        /// This method is used to send invitation emails to all guests whose invitations have not yet been sent.
+        /// </summary>
+        /// <param name="id">The ID of the party for which to send invitations.</param>
+        /// <returns> 
+        /// It returns a redirect to the manage page for the same party.
+        /// </returns>
         // POST: /PartyManager/SendInvitations/{id}
         // Sends invitation emails to all guests whose invitations have not yet been sent.
         [HttpPost]
