@@ -1,12 +1,11 @@
 using Microsoft.EntityFrameworkCore;
 using PartyManager.Data;
 
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-
-var app = builder.Build();
 
 string? dbConn = builder.Configuration.GetConnectionString("PartiesKDesai6826");
 if (dbConn == null)
@@ -15,6 +14,10 @@ if (dbConn == null)
     return;
 }
 builder.Services.AddDbContext<PartyDbContext>(options => options.UseSqlServer(dbConn));
+
+
+
+var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -25,11 +28,11 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseRouting();
+app.UseAuthorization();
 app.UseStaticFiles();
 
-app.UseRouting();
 
-app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
