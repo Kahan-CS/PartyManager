@@ -20,6 +20,14 @@ namespace PartyManager.Data
                 .WithOne(i => i.Party)
                 .HasForeignKey(i => i.PartyId);
 
+            // Map the InvitationStatus enum to its string representation in the database.
+            modelBuilder.Entity<Invitation>()
+                .Property(i => i.Status)
+                .HasConversion(
+                    v => v.ToString(),  // Convert enum to string when saving
+                    v => (InvitationStatus)Enum.Parse(typeof(InvitationStatus), v) // String back to enum for interpretation
+                );
+
             base.OnModelCreating(modelBuilder);
         }
     }

@@ -1,0 +1,89 @@
+﻿@model PartyManageViewModel
+
+@{
+    ViewData["Title"] = "Manage your party";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<!-- Navigation Links -->
+<nav>
+    <a asp-controller="PartyManager" asp-action="List">All parties</a> |
+    <a asp-controller="PartyManager" asp-action="Edit" asp-route-id="@Model.Party.PartyId">Edit this party</a> |
+    <a asp-controller="PartyManager" asp-action="Add">Add new party</a>
+</nav>
+
+<hr />
+
+<!-- Party Summary -->
+<h3>Party Summary:</h3>
+<p>
+    The party: <strong>@Model.Party.Description</strong> is at <strong>@Model.Party.Location</strong> on <strong>@Model.Party.EventDate.ToString("MMMM dd, yyyy")</strong>
+</p>
+
+<p>
+    <strong>Invites not sent:</strong> @Model.NotSentCount,
+    <strong>Sent count:</strong> @Model.SentCount,
+    <strong>Yes count:</strong> @Model.RespondedYesCount,
+    <strong>No count:</strong> @Model.RespondedNoCount
+</p>
+
+<hr />
+
+<!-- Invitations Table -->
+<h3>Invitations:</h3>
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Guest Name</th>
+            <th>Guest Email</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var invitation in Model.Invitations)
+        {
+            <tr>
+                <td>@invitation.GuestName</td>
+                <td>@invitation.GuestEmail</td>
+                <td>@invitation.HumanReadableStatus</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<hr />
+
+<!-- Form for Adding a New Invitation -->
+<h3>Add Invitation</h3>
+<form asp-controller="PartyManager" asp-action="AddInvitation" method="post">
+    <div class="text-danger" asp-validation-summary="All"></div>
+    <!-- Bind the party id directly -->
+    <input type="hidden" asp-for="PartyId" />
+    @* <p>Debug: Partyid, party.partyid: </p> @Model.PartyId, @Model.Party.PartyId *@
+
+    <div class="form-group">
+        <label asp-for="NewInvitation.GuestName">Guest Name</label>
+        <input type="text" asp-for="NewInvitation.GuestName" class="form-control" />
+        <span class="text-danger" asp-validation-for="NewInvitation.GuestName"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="NewInvitation.GuestEmail">Guest Email</label>
+        <input type="email" asp-for="NewInvitation.GuestEmail" class="form-control" />
+        <span class="text-danger" asp-validation-for="NewInvitation.GuestEmail"></span>
+    </div>
+    <div style="padding-top: 10px;">
+
+        <button type="submit" class="btn btn-primary">Create Invitation</button>
+
+    </div>
+</form>
+
+<hr />
+
+<!-- Send Invitations Button -->
+<h3>Actions</h3>
+<form asp-controller="PartyManager" asp-action="SendInvitations" method="post">
+    <input type="hidden" name="id" value="@Model.Party.PartyId" />
+    <button type="submit" class="btn btn-success">Send invitations</button>
+</form>
