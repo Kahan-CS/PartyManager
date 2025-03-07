@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace PartyManager.Migrations
 {
     /// <inheritdoc />
-    public partial class partydb : Migration
+    public partial class initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -34,7 +34,7 @@ namespace PartyManager.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     GuestName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     GuestEmail = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Status = table.Column<int>(type: "int", nullable: false),
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PartyId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>

@@ -12,8 +12,8 @@ using PartyManager.Data;
 namespace PartyManager.Migrations
 {
     [DbContext(typeof(PartyDbContext))]
-    [Migration("20250307153707_partydb")]
-    partial class partydb
+    [Migration("20250307221225_initial")]
+    partial class initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -44,8 +44,9 @@ namespace PartyManager.Migrations
                     b.Property<int>("PartyId")
                         .HasColumnType("int");
 
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("InvitationId");
 
