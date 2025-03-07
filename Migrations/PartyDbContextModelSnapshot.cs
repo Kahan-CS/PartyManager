@@ -50,6 +50,56 @@ namespace PartyManager.Migrations
                     b.HasIndex("PartyId");
 
                     b.ToTable("Invitations");
+
+                    b.HasData(
+                        new
+                        {
+                            InvitationId = 1,
+                            GuestEmail = "pmadziak@conestogac.on.ca",
+                            GuestName = "Bob Jones",
+                            PartyId = 1,
+                            Status = "InviteNotSent"
+                        },
+                        new
+                        {
+                            InvitationId = 2,
+                            GuestEmail = "peter.madziak@gmail.com",
+                            GuestName = "Sally Smith",
+                            PartyId = 1,
+                            Status = "InviteNotSent"
+                        },
+                        new
+                        {
+                            InvitationId = 3,
+                            GuestEmail = "pmadziak@conestogac.on.ca",
+                            GuestName = "Bob Jones",
+                            PartyId = 2,
+                            Status = "InviteNotSent"
+                        },
+                        new
+                        {
+                            InvitationId = 4,
+                            GuestEmail = "peter.madziak@gmail.com",
+                            GuestName = "Sally Smith",
+                            PartyId = 2,
+                            Status = "InviteNotSent"
+                        },
+                        new
+                        {
+                            InvitationId = 5,
+                            GuestEmail = "pmadziak@conestogac.on.ca",
+                            GuestName = "Bob Jones",
+                            PartyId = 3,
+                            Status = "InviteNotSent"
+                        },
+                        new
+                        {
+                            InvitationId = 6,
+                            GuestEmail = "peter.madziak@gmail.com",
+                            GuestName = "Sally Smith",
+                            PartyId = 3,
+                            Status = "InviteNotSent"
+                        });
                 });
 
             modelBuilder.Entity("PartyManager.Entities.Party", b =>
@@ -74,6 +124,29 @@ namespace PartyManager.Migrations
                     b.HasKey("PartyId");
 
                     b.ToTable("Parties");
+
+                    b.HasData(
+                        new
+                        {
+                            PartyId = 1,
+                            Description = "New Year's Eve Blast!!",
+                            EventDate = new DateTime(2025, 12, 31, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Location = "Time Square, NY"
+                        },
+                        new
+                        {
+                            PartyId = 2,
+                            Description = "Drinks at Moe's Bar",
+                            EventDate = new DateTime(2025, 10, 30, 16, 43, 12, 0, DateTimeKind.Unspecified),
+                            Location = "Moe's Bar, Springfield"
+                        },
+                        new
+                        {
+                            PartyId = 3,
+                            Description = "Thanksgiving Gathering",
+                            EventDate = new DateTime(2025, 10, 20, 16, 43, 12, 0, DateTimeKind.Unspecified),
+                            Location = "Springfield"
+                        });
                 });
 
             modelBuilder.Entity("PartyManager.Entities.Invitation", b =>
