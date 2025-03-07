@@ -1,5 +1,23 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model PartyManager.Models.InvitationResponseViewModel
+
 @{
+    ViewData["Title"] = "Invitation response";
 }
+
+
+<p>You have been invited to @Model.PartyDescription party!</p>
+<p>Hey @Model.GuestName, you have been invited to @Model.PartyDescription gathering</p>
+
+<form method="post">
+    <input type="hidden" asp-for="InvitationId" />
+
+    <label>Will you attend:</label>
+    <input type="radio" asp-for="Status" value="RespondedYes" /> Yes
+    <input type="radio" asp-for="Status" value="RespondedNo" /> No
+    <br />
+    <div style="padding-top: 10px;">
+
+        <button type="submit" class="btn btn-primary">Submit Response</button>
+
+    </div>
+</form>
