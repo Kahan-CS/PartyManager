@@ -1,0 +1,41 @@
+﻿@using PartyManager.Entities
+
+@model List<Party>
+
+@{
+    ViewData["Title"] = "All my Parties";
+}
+
+<p>
+    <a asp-controller="PartyManager" asp-action="Add">Add new party</a>
+
+    <!-- The list showing student records -->
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Description</th>
+                <th>Date</th>
+                <th>Location</th>
+                <th># of invites</th>
+                <th>Actions</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (Party party in Model)
+            {
+                <tr>
+                    <td>@party.Description</td>
+                    <td>@party.EventDate</td>
+                    <td>@party.Location</td>
+                    <td>@party.NumberOfInvitations</td>
+                    <td>
+                        <a asp-controller="PartyManager" asp-action="Modify" asp-route-id="@party.PartyId">Modify</a>
+                        <span class="px-4">|</span>
+                        <a asp-controller="PartyManager" asp-action="Edit" asp-route-id="@party.PartyId">Edit</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</p>

@@ -1,8 +1,8 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Welcome Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div>
+    <h1 class="display-4">Welcome Page</h1>
+    <p>Manage my <a asp-controller="PartyManager" asp-action="List">parties</a>!</p> or <a asp-controller="PartyManager" asp-action="Add">add a new party</a>
 </div>
